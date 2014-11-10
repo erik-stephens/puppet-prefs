@@ -1,0 +1,171 @@
+# -*- mode: shell-script -*- vim:ft=shell-script
+
+umask 0002
+
+# If not running interactively, don't do anything
+#
+if test -z "$PS1"; then
+  return
+fi
+
+function onbsd {
+  uname | grep -iq 'darwin'
+}
+
+COMPLETIONRC="/etc/bash_completion /usr/local/etc/bash_completion"
+for src in $COMPLETIONRC; do
+  test -f $src && . $src
+done
+
+# Make less more friendly for non-text input files, see lesspipe(1)
+#
+for exe in lesspipe lesspipe.sh; do
+  if which $exe > /dev/null; then
+    eval "$($exe)"
+  fi
+done
+
+# Enable color support of ls and also add handy aliases
+#
+if which dircolors > /dev/null; then
+  file=""
+  if test -r ~/.bash/dircolors; then
+    file="~/.bash/dircolors"
+  fi
+  eval "$(dircolors -b $file)"
+  alias ls='ls --color=auto'
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
+fi
+
+PATH=/anaconda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+if onbsd; then
+  # Python
+  export WORKON_HOME="$HOME/.pyvm"
+  export PIP_VIRTUALENV_BASE=$WORKON_HOME
+  if test -f /usr/local/bin/virtualenvwrapper.sh; then
+    . /usr/local/bin/virtualenvwrapper.sh
+  fi
+
+  # AWS
+  if test -x /usr/libexec/java_home; then
+    export JAVA_HOME="$(/usr/libexec/java_home)"
+    if test -f ~/.aws/environ; then
+      . ~/.aws/environ
+    fi
+    export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.6.13.0/libexec"
+  fi
+  complete -C aws_completer aws
+
+  # Ruby
+  eval "$(rbenv init -)"
+
+  # Node
+  # PATH=/usr/local/share/npm/bin:$PATH
+  # export NODE_PATH=/usr/local/share/npm/lib/node_modules
+fi
+export PATH
+
+# Environment variables & shell options
+#
+export VAGRANT_DEFAULT_PROVIDER=virtualbox
+export EDITOR="emacsclient -c"
+export LC_CTYPE=en_US.UTF-8
+export command_oriented_history=1
+export notify=100
+
+options=$(shopt)
+for i in autocd dotglob checkjobs checkwinsize cmdhist extglob histappend histverify progcomp sourcepath; do
+  if grep -q $i <<< $options; then
+    shopt -s $i
+  fi
+done
+
+# Add timestamps to history.
+#  - $(history -ar) to append (-a) or read (-r) history immediately,
+#    which is nice for sharing twix terminal windows or tabs.
+#
+export HISTTIMEFORMAT="%Y-%m-%dT%H:%M:%S  "
+export HISTFILE=~/.history
+export HISTFILESIZE=50000
+export HISTCONTROL="ignorespace:ignoredups"
+
+# Functions for use with PS1
+
+export VIRTUAL_ENV_DISABLE_PROMPT="Get off me!"
+function pythonenv {
+  if test "$VIRTUAL_ENV"; then
+    basename $VIRTUAL_ENV
+  fi
+}
+function rubyenv {
+  rvm current
+}
+function gitbranch {
+  git branch 2> /dev/null | awk '$1 == "*" { print $2 }'
+}
+
+# Better hostname on AWS instances.
+# if hostname | grep -Eq '^ip-'; then
+#   ip=$(grep $(hostname) /etc/hosts | awk '{print $1}')
+#   hostname=$(grep $ip /etc/hosts | head -1 | awk '{print $2}')
+#   if test -n "$hostname"; then
+#     export HOSTNAME=$(echo $hostname | awk -F '[.]' '{print $1}')
+#   fi
+# fi
+
+if which facter > /dev/null; then
+  HOST="$(facter host)"
+  if test -z "$HOST"; then
+    HOST="$(facter hostname)"
+  fi
+else
+  HOST="$(hostname -s)"
+fi
+
+PS1="\n\d \t - \[\033[01;32m\]\u@$HOST\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] - git:\[\033[01;34m\]\$(gitbranch)\[\033[00m\] - python:\[\033[01;34m\]\$(pythonenv)\[\033[00m\]\n\! \\$ "
+
+if echo $TERM | grep -Eq '(xterm|rxvt|urxvt)'; then
+  # If this is an xterm set the title to host:dir
+  PS1="\[\e]0;\h\a\]$PS1"
+fi
+
+if ! test -d ~/.dtach; then
+  mkdir ~/.dtach
+fi
+alias e="$EDITOR"
+alias em='dtach -A ~/.dtach/edit emacs --daemon'
+alias db='dtach -A ~/.dtach/db psql '
+alias py2='dtach -A ~/.dtach/ipython2 ipython2'
+alias py3='dtach -A ~/.dtach/ipython3 ipython3'
+
+if onbsd; then
+  alias flushcache="sudo dscacheutil -flushcache"
+  alias srvs="netstat -p tcp -an | grep -i listen"
+else
+  alias srvs='netstat -plunt'
+fi
+
+alias cp="cp -i"
+alias mv="mv -i"
+alias rm="rm -i"
+alias ll="ls -l"
+
+alias g='git'
+complete -o default -o nospace -F _git g
+
+# Consult `bind -P` for list of current bindings.
+bind -x '"\C-SPACE":set-mark'
+bind -x '"\C-x\C-x":exchange-point-and-mark'
+bind -x '"\C-]":character-search'
+bind -x '"\C-[":character-search-backward'
+bind -x '"\M-9":start-kbd-macro'
+bind -x '"\M-0":end-kbd-macro'
+bind -x '"\M--":call-last-kbd-macro'
+
+# if ! onbsd; then
+#   # Unbind C-w so we can bind it to something more emacs-like.
+#   stty werase undef
+#   bind -x '"\C-w":kill-region'
+# fi

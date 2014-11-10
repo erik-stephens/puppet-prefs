@@ -1,0 +1,5 @@
+# -*- mode: shell-script -*- vim:ft=shell-script
+
+if test -f ~/.bashrc; then
+  . ~/.bashrc
+fi

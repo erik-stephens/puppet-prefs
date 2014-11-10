@@ -1,0 +1,16 @@
+{
+  "name": "prefs",
+  "version": "0.1.0",
+  "author": "Erik Stephens",
+  "summary": "Manage personal preferences (installed pkgs, dotfiles, etc)",
+  "license": "Apache 2.0",
+  "source": "https://github.com/erik-stephens/puppet-prefs",
+  "project_page": "https://github.com/erik-stephens/tfks-prefs",
+  "issues_url": "https://github.com/erik-stephens/puppet-prefs/issues",
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 1.0.0"
+    }
+  ]
+}

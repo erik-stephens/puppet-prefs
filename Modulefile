@@ -1,0 +1,10 @@
+name          'prefs'
+version       '0.1.0'
+source        'https://github.com/erik-stephens/puppet-prefs'
+author        'Erik Stephens'
+license       'Apache 2.0'
+summary       'Manage personal preferences (installed pkgs, dotfiles, etc)'
+description   ''
+project_page  'https://github.com/erik-stephens/puppet-prefs'
+
+dependency 'puppetlabs/stdlib'

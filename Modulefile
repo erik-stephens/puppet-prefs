@@ -7,4 +7,5 @@ summary       'Manage personal preferences (installed pkgs, dotfiles, etc)'
 description   ''
 project_page  'https://github.com/erik-stephens/puppet-prefs'
 
-dependency 'puppetlabs/stdlib'
+dependency    'puppetlabs/stdlib'
+dependency    'puppetlabs/concat'

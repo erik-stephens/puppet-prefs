@@ -165,6 +165,7 @@ alias em='dtach -A ~/.dtach/edit emacs --daemon'
 alias db='dtach -A ~/.dtach/db psql '
 alias py2='dtach -A ~/.dtach/ipython2 ipython2'
 alias py3='dtach -A ~/.dtach/ipython3 ipython3'
+alias eyaml-edit='eyaml edit --pkcs7-private-key /opt/boxen/eyaml/private.pkcs7.pem --pkcs7-public-key /opt/boxen/eyaml/public.pkcs7.pem'
 
 if onbsd; then
   alias flushcache="sudo dscacheutil -flushcache"

@@ -15,8 +15,8 @@ class prefs::config {
     source => 'puppet:///modules/prefs/inputrc',
     mode   => '0644',
   }
-  file { "${prefs::home}/.gitconfig":
-    source => 'puppet:///modules/prefs/gitconfig',
-    mode   => '0644',
-  }
+  # file { "${prefs::home}/.gitconfig":
+  #   source => 'puppet:///modules/prefs/gitconfig',
+  #   mode   => '0644',
+  # }
 }

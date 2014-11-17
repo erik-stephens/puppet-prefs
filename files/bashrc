@@ -12,7 +12,10 @@ function onbsd {
   uname | grep -iq 'darwin'
 }
 
-COMPLETIONRC="/etc/bash_completion /usr/local/etc/bash_completion"
+COMPLETIONRC="/etc/bash_completion"
+if which brew > /dev/null; then
+  COMPLETIONRC="$(brew --prefix)/etc/bash_completion ${COMPLETIONRC}"
+fi
 for src in $COMPLETIONRC; do
   test -f $src && . $src
 done

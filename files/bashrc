@@ -42,9 +42,15 @@ if which dircolors > /dev/null; then
   alias egrep='egrep --color=auto'
 fi
 
-PATH=/anaconda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 if onbsd; then
+  if test -d /opt/boxen; then
+    PATH=/opt/boxen/homebrew/sbin:/opt/boxen/homebrew/bin:$PATH
+  fi
+
   # Python
+  #
+  PATH=/anaconda/bin:$PATH
   export WORKON_HOME="$HOME/.pyvm"
   export PIP_VIRTUALENV_BASE=$WORKON_HOME
   if test -f /usr/local/bin/virtualenvwrapper.sh; then
@@ -52,6 +58,7 @@ if onbsd; then
   fi
 
   # AWS
+  #
   if test -x /usr/libexec/java_home; then
     export JAVA_HOME="$(/usr/libexec/java_home)"
     if test -f ~/.aws/environ; then
@@ -143,7 +150,7 @@ else
   HOST="$(hostname -s)"
 fi
 
-PS1="\n\d \t - \[\033[01;32m\]\u@$HOST\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\] - git:\[\033[01;34m\]\$(gitbranch)\[\033[00m\] - python:\[\033[01;34m\]\$(pythonenv)\[\033[00m\]\n\! \\$ "
+PS1="\n\d \t  \[\033[01;32m\]\u@$HOST\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]  git:\[\033[01;34m\]\$(gitbranch)\[\033[00m\]  python:\[\033[01;34m\]\$(pythonenv)\[\033[00m\]  ruby:\[\033[01;34m\]\$(rubyenv)\[\033[00m\]\n\! \\$ "
 
 if echo $TERM | grep -Eq '(xterm|rxvt|urxvt)'; then
   # If this is an xterm set the title to host:dir

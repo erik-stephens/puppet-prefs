@@ -62,9 +62,16 @@ if onbsd; then
   complete -C aws_completer aws
 
   # Ruby
+  #
+  PATH=/opt/boxen/rbenv/bin:$PATH
+  # export RBENV_ROOT=~/.rbenv
+  if ! test -e ~/.rbenv; then
+    ln -s /opt/boxen/rbenv ~/.rbenv
+  fi
   eval "$(rbenv init -)"
 
   # Node
+  #
   # PATH=/usr/local/share/npm/bin:$PATH
   # export NODE_PATH=/usr/local/share/npm/lib/node_modules
 fi
@@ -95,18 +102,27 @@ export HISTFILESIZE=50000
 export HISTCONTROL="ignorespace:ignoredups"
 
 # Functions for use with PS1
-
+#
 export VIRTUAL_ENV_DISABLE_PROMPT="Get off me!"
 function pythonenv {
   if test "$VIRTUAL_ENV"; then
     basename $VIRTUAL_ENV
+  else
+    echo sys
   fi
 }
+
 function rubyenv {
-  rvm current
+  rbenv version-name 2> /dev/null
 }
+
 function gitbranch {
-  git branch 2> /dev/null | awk '$1 == "*" { print $2 }'
+  local branch=$(git branch 2> /dev/null)
+  if test -n "${branch}"; then
+    echo $branch | awk '$1 == "*" { print $2 }'
+  else
+    echo none
+  fi
 }
 
 # Better hostname on AWS instances.

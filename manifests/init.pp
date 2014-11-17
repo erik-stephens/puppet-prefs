@@ -5,7 +5,7 @@
 # === Parameters
 #
 # [*home*]
-#   Explanation of what this parameter affects and what it defaults to.
+#   Your home directory.
 #
 class prefs (
   $home,

@@ -34,7 +34,7 @@ class prefs::ssh (
 
 # == Resource prefs::ssh::host
 #
-# DOOD?
+# Manage host blocks in ~/.ssh/config
 #
 define prefs::ssh::host (
   $txt,
@@ -52,7 +52,7 @@ define prefs::ssh::host (
 
 # == Resource prefs::ssh::key
 #
-# DOOD?
+# Manage public & private keys.
 #
 define prefs::ssh::key (
   $public,

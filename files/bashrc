@@ -12,36 +12,6 @@ function onbsd {
   uname | grep -iq 'darwin'
 }
 
-COMPLETIONRC="/etc/bash_completion"
-if which brew > /dev/null; then
-  COMPLETIONRC="$(brew --prefix)/etc/bash_completion ${COMPLETIONRC}"
-fi
-for src in $COMPLETIONRC; do
-  test -f $src && . $src
-done
-
-# Make less more friendly for non-text input files, see lesspipe(1)
-#
-for exe in lesspipe lesspipe.sh; do
-  if which $exe > /dev/null; then
-    eval "$($exe)"
-  fi
-done
-
-# Enable color support of ls and also add handy aliases
-#
-if which dircolors > /dev/null; then
-  file=""
-  if test -r ~/.bash/dircolors; then
-    file="~/.bash/dircolors"
-  fi
-  eval "$(dircolors -b $file)"
-  alias ls='ls --color=auto'
-  alias grep='grep --color=auto'
-  alias fgrep='fgrep --color=auto'
-  alias egrep='egrep --color=auto'
-fi
-
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 if onbsd; then
   if test -d /opt/boxen; then
@@ -83,6 +53,36 @@ if onbsd; then
   # export NODE_PATH=/usr/local/share/npm/lib/node_modules
 fi
 export PATH
+
+COMPLETIONRC="/etc/bash_completion"
+if which brew > /dev/null; then
+  COMPLETIONRC="$(brew --prefix)/etc/bash_completion ${COMPLETIONRC}"
+fi
+for src in $COMPLETIONRC; do
+  test -f $src && . $src
+done
+
+# Make less more friendly for non-text input files, see lesspipe(1)
+#
+for exe in lesspipe lesspipe.sh; do
+  if which $exe > /dev/null; then
+    eval "$($exe)"
+  fi
+done
+
+# Enable color support of ls and also add handy aliases
+#
+if which dircolors > /dev/null; then
+  file=""
+  if test -r ~/.bash/dircolors; then
+    file="~/.bash/dircolors"
+  fi
+  eval "$(dircolors -b $file)"
+  alias ls='ls --color=auto'
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
+fi
 
 # Environment variables & shell options
 #

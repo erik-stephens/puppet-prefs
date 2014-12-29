@@ -86,7 +86,7 @@ fi
 
 # Environment variables & shell options
 #
-export VAGRANT_DEFAULT_PROVIDER=virtualbox
+export VAGRANT_DEFAULT_PROVIDER=managed
 export EDITOR="emacsclient -c"
 export LC_CTYPE=en_US.UTF-8
 export command_oriented_history=1

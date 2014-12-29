@@ -126,7 +126,7 @@ function rubyenv {
 function gitbranch {
   local branch=$(git branch 2> /dev/null)
   if test -n "${branch}"; then
-    echo $branch | awk '$1 == "*" { print $2 }'
+    echo "${branch}" | awk '$1 == "*" { print $2 }'
   else
     echo none
   fi

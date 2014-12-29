@@ -41,16 +41,14 @@ if onbsd; then
   # Ruby
   #
   PATH=/opt/boxen/rbenv/bin:$PATH
-  # export RBENV_ROOT=~/.rbenv
-  if ! test -e ~/.rbenv; then
-    ln -s /opt/boxen/rbenv ~/.rbenv
-  fi
+  export RBENV_ROOT=/opt/boxen/rbenv
   eval "$(rbenv init -)"
 
   # Node
   #
-  # PATH=/usr/local/share/npm/bin:$PATH
-  # export NODE_PATH=/usr/local/share/npm/lib/node_modules
+  PATH=/opt/boxen/nodenv/bin:$PATH
+  export NODENV_ROOT=/opt/boxen/nodenv
+  eval "$(nodenv init -)"
 fi
 export PATH
 

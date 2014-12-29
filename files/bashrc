@@ -13,30 +13,39 @@ function onbsd {
 }
 
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-if onbsd; then
-  if test -d /opt/boxen; then
-    PATH=/opt/boxen/homebrew/sbin:/opt/boxen/homebrew/bin:$PATH
-  fi
 
-  # Python
-  #
-  PATH=/anaconda/bin:$PATH
-  export WORKON_HOME="$HOME/.pyvm"
-  export PIP_VIRTUALENV_BASE=$WORKON_HOME
-  if test -f /usr/local/bin/virtualenvwrapper.sh; then
-    . /usr/local/bin/virtualenvwrapper.sh
-  fi
+# Python
+#
+export WORKON_HOME="$HOME/.pyvm"
+export PIP_VIRTUALENV_BASE=$WORKON_HOME
+if test -f /usr/local/bin/virtualenvwrapper.sh; then
+  . /usr/local/bin/virtualenvwrapper.sh
+fi
+if test -d ~/anaconda/bin; then
+  PATH=~/anaconda/bin:$PATH
+fi
 
-  # AWS
-  #
-  if test -x /usr/libexec/java_home; then
-    export JAVA_HOME="$(/usr/libexec/java_home)"
-    if test -f ~/.aws/environ; then
-      . ~/.aws/environ
-    fi
-    export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.6.13.0/libexec"
+# AWS
+#
+if test -x /usr/libexec/java_home; then
+  export JAVA_HOME="$(/usr/libexec/java_home)"
+  if test -f ~/.aws/environ; then
+    . ~/.aws/environ
   fi
-  complete -C aws_completer aws
+  export EC2_HOME="/usr/local/Cellar/ec2-api-tools/1.6.13.0/libexec"
+fi
+complete -C aws_completer aws
+
+# OPAM configuration
+#
+if test -f ~/.opam/opam-init/init.sh; then
+  . ~/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+fi
+
+# Boxen configuration
+#
+if test -d /opt/boxen; then
+  . /opt/boxen/env.sh
 
   # Ruby
   #
@@ -49,7 +58,12 @@ if onbsd; then
   PATH=/opt/boxen/nodenv/bin:$PATH
   export NODENV_ROOT=/opt/boxen/nodenv
   eval "$(nodenv init -)"
+
+  # Encrypted YAML
+  #
+  alias eyaml-edit='eyaml edit --pkcs7-private-key /opt/boxen/eyaml/private.pkcs7.pem --pkcs7-public-key /opt/boxen/eyaml/public.pkcs7.pem'
 fi
+
 export PATH
 
 COMPLETIONRC="/etc/bash_completion"
@@ -163,7 +177,7 @@ alias em='dtach -A ~/.dtach/edit emacs --daemon'
 alias db='dtach -A ~/.dtach/db psql '
 alias py2='dtach -A ~/.dtach/ipython2 ipython2'
 alias py3='dtach -A ~/.dtach/ipython3 ipython3'
-alias eyaml-edit='eyaml edit --pkcs7-private-key /opt/boxen/eyaml/private.pkcs7.pem --pkcs7-public-key /opt/boxen/eyaml/public.pkcs7.pem'
+alias py='py3'
 
 if onbsd; then
   alias flushcache="sudo dscacheutil -flushcache"

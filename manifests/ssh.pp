@@ -41,7 +41,7 @@ define prefs::ssh::host (
   $order = '02',
   $ensure = present,
   ) {
-  $block = strip(regsubst($txt, "\n", "\n\t", 'G'))
+  $block = strip(regsubst($txt, "\n[\n\t ]*", "\n\t", 'G'))
   concat::fragment { "${prefs::ssh::cfg}:${name}":
     ensure  => $ensure,
     target  => $prefs::ssh::cfg,

@@ -208,3 +208,9 @@ bind -x '"\M--":call-last-kbd-macro'
 #   stty werase undef
 #   bind -x '"\C-w":kill-region'
 # fi
+
+if test -d ~/.bash.d; then
+  for i in $/.bash.d/*; do
+    . $i
+  done
+fi

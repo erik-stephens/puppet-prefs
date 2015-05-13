@@ -105,7 +105,7 @@ export command_oriented_history=1
 export notify=100
 
 options=$(shopt)
-for i in autocd dotglob checkjobs checkwinsize cmdhist extglob histappend histverify progcomp sourcepath; do
+for i in autocd checkjobs checkwinsize cmdhist extglob histappend histverify progcomp sourcepath; do
   if grep -q $i <<< $options; then
     shopt -s $i
   fi

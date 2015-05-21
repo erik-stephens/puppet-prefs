@@ -66,8 +66,12 @@ fi
 
 export PATH
 
+function in-path {
+  which $1 > /dev/null 2>&1
+}
+
 COMPLETIONRC="/etc/bash_completion"
-if which brew > /dev/null; then
+if in-path brew; then
   COMPLETIONRC="$(brew --prefix)/etc/bash_completion ${COMPLETIONRC}"
 fi
 for src in $COMPLETIONRC; do
@@ -76,15 +80,15 @@ done
 
 # Make less more friendly for non-text input files, see lesspipe(1)
 #
-for exe in lesspipe lesspipe.sh; do
-  if which $exe > /dev/null; then
+for exe in lesspipe; do
+  if in-path $exe; then
     eval "$($exe)"
   fi
 done
 
 # Enable color support of ls and also add handy aliases
 #
-if which dircolors > /dev/null; then
+if in-path dircolors; then
   file=""
   if test -r ~/.bash/dircolors; then
     file="~/.bash/dircolors"
@@ -153,7 +157,7 @@ function gitbranch {
 #   fi
 # fi
 
-if which facter > /dev/null; then
+if in-path facter; then
   HOST="$(facter host)"
   if test -z "$HOST"; then
     HOST="$(facter hostname)"
@@ -210,7 +214,7 @@ bind -x '"\M--":call-last-kbd-macro'
 # fi
 
 if test -d ~/.bash.d; then
-  for i in $/.bash.d/*; do
+  for i in ~/.bash.d/*; do
     . $i
   done
 fi
